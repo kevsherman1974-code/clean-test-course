@@ -5,7 +5,20 @@ on:
     branches:
       - lesson-5
 jobs:
+  security_test:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v3
+
+    - name: disable debug
+      run: |
+        sed -i 's/DEBUG = True/DEBUG = False/g' \
+        hangry_api/hangry_api/settings.py
+
+    - name: Run security scan
+      uses: pycharm/security-scanner@master
   unit_test:
+    needs:security_test
     runs-on: ubuntu-latest
     defaults:
       run:
